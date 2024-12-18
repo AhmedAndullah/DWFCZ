@@ -9,6 +9,7 @@ import ToolboxTalkScreen from './screens/ToolboxTalkScreen'; // New screnomen
 import LoginScreen from './screens/LoginScreen';
 import ToolboxTalkDetailsScreen from './screens/ToolboxTalkDetailScreen';
 import ConductToolboxTalkScreen from './screens/ConductToolboxTalkScreen';
+import AnnouncementScreen from './screens/AnnouncementsScreen';
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
           <Drawer.Screen name="Toolbox Talk" component={ToolboxTalkScreen} />
           <Drawer.Screen name="ToolboxTalkDetails" component={ToolboxTalkDetailsScreen} />
           <Drawer.Screen name="ConductToolboxTalk" component={ConductToolboxTalkScreen} />
+          <Drawer.Screen name="Announcement" component={AnnouncementScreen} />
 
         </Drawer.Navigator>
       </NavigationContainer>

@@ -17,7 +17,7 @@ export const authApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['ToolboxTalks', 'Projects' , 'Employee'], // Adding Projects tag
+  tagTypes: ['ToolboxTalks', 'Projects', 'Employee'], // Adding Projects tag
 
   endpoints: (builder) => ({
     // Endpoint for user login
@@ -62,8 +62,6 @@ export const authApi = createApi({
     // Endpoint for fetching all companies
     getAllCompanies: builder.query({
       query: () => '/company/all_companies/',
-      // providesTags: (result) =>
-      //   result?.map(({ id }) => ({ type: 'Companies', id })) || [],
     }),
 
     // Endpoint for fetching toolbox talks
@@ -72,23 +70,34 @@ export const authApi = createApi({
       providesTags: ['ToolboxTalks'],
     }),
 
-
-
+    // Endpoint for fetching projects
     getProjects: builder.query({
-      query: () => '/projects/', // Endpoint to fetch projects
-      providesTags: ['Projects'], // Tag the response to use in invalidations
+      query: () => '/projects/',
+      providesTags: ['Projects'],
     }),
 
+    // Endpoint for fetching employees
     getEmployee: builder.query({
-      query: () => '/users/employees/', // Endpoint to fetch projects
-      providesTags: ['Employee'], // Tag the response to use in invalidations
+      query: () => '/users/employees/',
+      providesTags: ['Employee'],
     }),
-
 
     // Endpoint for updating SDS search
     getSdsSearch: builder.query({
       query: () => '/sds_searches/',
-      
+    }),
+
+    // Endpoint for conducting toolbox talks
+    conductToolboxTalk: builder.mutation({
+      query: (formData) => ({
+        url: '/conducted_toolbox_talks/', // Note the corrected endpoint path
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+    getAnnouncements: builder.query({
+      query: () => '/announcements/',
+      providesTags: ['Announcements'],
     }),
   }),
 });
@@ -100,6 +109,7 @@ export const {
   useGetToolboxTalkQuery,
   useGetSdsSearchQuery,
   useGetProjectsQuery,
-  useGetEmployeeQuery, // Exporting this hook to fetch project data
-
+  useGetEmployeeQuery,
+  useConductToolboxTalkMutation, 
+  useGetAnnouncementsQuery,
 } = authApi;
