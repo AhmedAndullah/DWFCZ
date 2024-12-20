@@ -29,7 +29,7 @@ const ToolboxTalkDetailsScreen = () => {
           throw new Error('No auth token found. Please log in again.');
         }
 
-        const response = await fetch(`https://app.dfwcz.com/api/toolbox-talks/${id}`, {
+        const response = await fetch(`https://app.dfwcz.com/api/toolbox-talks/${id}`, { 
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',

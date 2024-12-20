@@ -70,6 +70,11 @@ export const authApi = createApi({
       providesTags: ['ToolboxTalks'],
     }),
 
+    getDocuments: builder.query({
+      query: () => `/documents/`,
+      // providesTags: ['Documents'],
+    }),
+
     // Endpoint for fetching projects
     getProjects: builder.query({
       query: () => '/projects/',
@@ -82,9 +87,15 @@ export const authApi = createApi({
       providesTags: ['Employee'],
     }),
 
+    
+
     // Endpoint for updating SDS search
     getSdsSearch: builder.query({
       query: () => '/sds_searches/',
+    }),
+
+    getEquipment: builder.query({
+      query: () => '/equipment/',
     }),
 
     // Endpoint for conducting toolbox talks
@@ -112,4 +123,6 @@ export const {
   useGetEmployeeQuery,
   useConductToolboxTalkMutation, 
   useGetAnnouncementsQuery,
+  useGetDocumentsQuery,
+  useGetEquipmentQuery,
 } = authApi;

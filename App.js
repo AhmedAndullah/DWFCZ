@@ -10,6 +10,10 @@ import LoginScreen from './screens/LoginScreen';
 import ToolboxTalkDetailsScreen from './screens/ToolboxTalkDetailScreen';
 import ConductToolboxTalkScreen from './screens/ConductToolboxTalkScreen';
 import AnnouncementScreen from './screens/AnnouncementsScreen';
+import DocumentScreen from './screens/DocumentsScreens';
+import DocumentDetailScreen from './screens/DocumentsDetailScreen';
+import EquipmentScreen from './screens/EquipmentScreen';
+import EquipmentDetailScreen from './screens/EquipmentDetailScreen';
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -24,6 +28,11 @@ export default function App() {
           <Drawer.Screen name="ToolboxTalkDetails" component={ToolboxTalkDetailsScreen} />
           <Drawer.Screen name="ConductToolboxTalk" component={ConductToolboxTalkScreen} />
           <Drawer.Screen name="Announcement" component={AnnouncementScreen} />
+          <Drawer.Screen name="Documents" component={DocumentScreen} />
+          <Drawer.Screen name="DocumentsDetail" component={DocumentDetailScreen} />
+          <Drawer.Screen name="Equipment" component={EquipmentScreen} />
+          <Drawer.Screen name="EquipmentDetail" component={EquipmentDetailScreen} />
+
 
         </Drawer.Navigator>
       </NavigationContainer>
