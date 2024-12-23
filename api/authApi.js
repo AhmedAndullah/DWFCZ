@@ -64,6 +64,10 @@ export const authApi = createApi({
       query: () => '/company/all_companies/',
     }),
 
+    getUserProfile  : builder.query({
+      query: () => '/users/profile/',
+    }),
+
     // Endpoint for fetching toolbox talks
     getToolboxTalk: builder.query({
       query: () => '/toolbox-talks/',
@@ -108,7 +112,6 @@ export const authApi = createApi({
     }),
     getAnnouncements: builder.query({
       query: () => '/announcements/',
-      providesTags: ['Announcements'],
     }),
   }),
 });
@@ -125,4 +128,5 @@ export const {
   useGetAnnouncementsQuery,
   useGetDocumentsQuery,
   useGetEquipmentQuery,
+  useGetUserProfileQuery,
 } = authApi;

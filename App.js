@@ -14,6 +14,7 @@ import DocumentScreen from './screens/DocumentsScreens';
 import DocumentDetailScreen from './screens/DocumentsDetailScreen';
 import EquipmentScreen from './screens/EquipmentScreen';
 import EquipmentDetailScreen from './screens/EquipmentDetailScreen';
+import ProfileScreen from './screens/ProfileScreen';
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -32,8 +33,7 @@ export default function App() {
           <Drawer.Screen name="DocumentsDetail" component={DocumentDetailScreen} />
           <Drawer.Screen name="Equipment" component={EquipmentScreen} />
           <Drawer.Screen name="EquipmentDetail" component={EquipmentDetailScreen} />
-
-
+          <Drawer.Screen name="Profile" component={ProfileScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
     </Provider>
