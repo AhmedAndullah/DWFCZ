@@ -130,6 +130,14 @@ export const authApi = createApi({
       query: () => '/companies/',
     }),
 
+    getFormAssignments: builder.query({
+      query: () => '/form-assignments/',
+    }),
+    getFormAssignmentsDetail: builder.query({
+      query: (id) => `/form-assignment/${id}/`,
+    }),
+
+
     // Endpoint for conducting toolbox talks
     conductToolboxTalk: builder.mutation({
       query: (formData) => ({
@@ -176,5 +184,7 @@ export const {
   useGetDivisionByIdQuery,
   useGetDepartmentsQuery,
   useSubmitFormResponseMutation,
+  useGetFormAssignmentsQuery,
+  useGetFormAssignmentsDetailQuery,
 
 } = authApi;

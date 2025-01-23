@@ -62,6 +62,18 @@ const FormListScreen = () => {
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
+
+        {/* Submitted Forms Button */}
+        <TouchableOpacity
+          style={styles.submittedFormsButton}
+          onPress={() => {
+            console.log('Navigating to Submitted Forms');
+            // Add navigation or functionality for "Submitted Forms" here
+            navigation.navigate('SubmitForm'); // Replace with your desired screen
+          }}
+        >
+          <Text style={styles.submittedFormsButtonText}>Submitted Forms</Text>
+        </TouchableOpacity>
       </View>
 
       {/* List Section */}
@@ -75,7 +87,6 @@ const FormListScreen = () => {
               navigation.navigate('FormDetail', {
                 id: item.id,
                 assignment_id: 1, // hardcoded assignment_id
-
               })
             }
           >
@@ -129,6 +140,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     fontSize: 16,
+  },
+  submittedFormsButton: {
+    marginTop: 10,
+    backgroundColor: '#f2bb13',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  submittedFormsButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   item: {
     flexDirection: 'row',

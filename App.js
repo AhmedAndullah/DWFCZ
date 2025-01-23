@@ -26,6 +26,8 @@ import AnnouncementScreen from './screens/AnnouncementsScreen';
 import DivisionScreen from './screens/DivisionScreen';
 import DivisionDetailScreen from './screens/DivisionDetailScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import SubmittedFormScreen from './screens/SubmittedFormScreen';
+import SubmittedFormDetailScreen from './screens/SubmittedFormDetailScreen';
 
 
 const Drawer = createDrawerNavigator();
@@ -126,6 +128,18 @@ if (isLoading) {
         options={{ headerShown: false }}
 
         />
+        <Stack.Screen name="SubmitForm" 
+        component={SubmittedFormScreen} 
+        options={{ headerShown: false }}
+
+        />
+
+        <Stack.Screen name="SubmitFormDetail" 
+        component={SubmittedFormDetailScreen} 
+        options={{ headerShown: false }}
+
+        />
+
         
       </Stack.Navigator>
     );

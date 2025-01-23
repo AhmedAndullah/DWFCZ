@@ -29,12 +29,33 @@ const LessonProgressScreen = () => {
     </View>
   );
 
-  const renderIncompleteQuiz = ({ item }) => (
-    <View style={styles.formCard}>
-      <Text style={styles.formTitle}>{item.name}</Text>
-      <Text style={styles.formDetails}>Incomplete Quiz</Text>
-    </View>
-  );
+  const renderIncompleteQuiz = ({ item }) => {
+    console.log('Incomplete Quiz Item:', item); // Debugging: log the item to verify its structure
+  
+    return (
+      <TouchableOpacity
+        style={styles.formCard}
+        onPress={() => {
+          console.log('Navigating to FormDetail screen with:', {
+            formID: item.id, // Correct key for form ID
+            assignmentID: 1, // Update this if there's a specific assignment ID key
+          });
+          navigation.navigate('Forms', {
+            screen: 'FormDetail',
+            params: {
+              id: item.id, // Pass the correct form ID
+              assignment_id: 1, // Replace with actual assignment ID key if available
+            },
+          });
+        }}
+      >
+        <Text style={styles.formTitle}>{item.name}</Text>
+        <Text style={styles.formDetails}>Incomplete Quiz</Text>
+      </TouchableOpacity>
+    );
+  };
+  
+  
 
   if (isLoading) {
     return (
@@ -96,13 +117,6 @@ const LessonProgressScreen = () => {
           </Text>
         </View>
       )}
-
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.navigate('Lesson')}
-      >
-        <Text style={styles.backButtonText}>Back to Lessons</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 };
