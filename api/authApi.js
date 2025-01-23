@@ -98,8 +98,36 @@ export const authApi = createApi({
       query: () => '/sds_searches/',
     }),
 
+    getDepartments: builder.query({
+      query: () => '/departments/',
+    }),
+
     getEquipment: builder.query({
       query: () => '/equipment/',
+    }),
+
+    getLessons: builder.query({
+      query: () => '/lessons/',
+    }),
+
+    getForms: builder.query({
+      query: () => '/forms/',
+    }),
+
+    getLessonsProgress: builder.query({
+      query: (id) => `/lessons/${id}/progress/`,
+    }),
+
+    getFormsProgress: builder.query({
+      query: (id) => `/forms/${id}/`,
+    }),
+
+    getDivisionById: builder.query({
+      query: (id) => `/companies/${id}/`,
+    }),
+
+    getCompanies: builder.query({
+      query: () => '/companies/',
     }),
 
     // Endpoint for conducting toolbox talks
@@ -108,6 +136,17 @@ export const authApi = createApi({
         url: '/conducted_toolbox_talks/', // Note the corrected endpoint path
         method: 'POST',
         body: formData,
+      }),
+    }),
+
+    submitFormResponse: builder.mutation({
+      query: (formData) => ({
+        url: '/submit-form-response/',
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       }),
     }),
     getAnnouncements: builder.query({
@@ -129,4 +168,13 @@ export const {
   useGetDocumentsQuery,
   useGetEquipmentQuery,
   useGetUserProfileQuery,
+  useGetLessonsQuery,
+  useGetLessonsProgressQuery,
+  useGetFormsQuery,
+  useGetFormsProgressQuery,
+  useGetCompaniesQuery,
+  useGetDivisionByIdQuery,
+  useGetDepartmentsQuery,
+  useSubmitFormResponseMutation,
+
 } = authApi;

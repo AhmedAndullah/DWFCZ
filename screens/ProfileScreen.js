@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Alert , Platform } from 'react-native';
-import { useGetUserProfileQuery } from '../api/authApi'; // Hook to fetch profile data
+import { useGetUserProfileQuery , useLogoutMutation } from '../api/authApi'; // Hook to fetch profile data
 
 const ProfileScreen = () => {
   const { data, error, isLoading } = useGetUserProfileQuery();

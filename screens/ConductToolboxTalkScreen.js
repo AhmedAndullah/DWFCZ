@@ -12,17 +12,17 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import Signature from 'react-native-signature-canvas';
 import { useGetProjectsQuery, useGetEmployeeQuery, useConductToolboxTalkMutation } from '../api/authApi';
-import { useNavigation } from '@react-navigation/native'; // Import navigation hook
+import { useNavigation } from '@react-navigation/native'; 
 
 
 const ConductToolboxTalkScreen = ({ route }) => {
-  const { title, id } = route.params; // Assuming `id` is passed for the toolbox talk
+  const { title, id } = route.params; 
   const [project, setProject] = useState('');
   const [foreman, setForeman] = useState('');
   const [foremanSignature, setForemanSignature] = useState('');
   const [workers, setWorkers] = useState([]);
-  const [currentWorker, setCurrentWorker] = useState('');
-  const [workerSignatures, setWorkerSignatures] = useState({});
+  const [currentWorker, setCurrentWorker] = useState(['']);
+  const [workerSignatures, setWorkerSignatures] = useState([]);
   const [showSignaturePad, setShowSignaturePad] = useState(false);
   const [currentSignature, setCurrentSignature] = useState('');
   const [isForemanSigning, setIsForemanSigning] = useState(false);
@@ -40,12 +40,10 @@ const ConductToolboxTalkScreen = ({ route }) => {
       setForemanSignature(currentSignature);
       setShowSignaturePad(false);
       setCurrentSignature('');
-      // Alert.alert('Success', 'Foreman signature saved.');
     } else {
       Alert.alert('Validation Error', 'Please provide a signature.');
     }
   };
-
   const saveWorkerSignature = () => {
     if (!currentWorker) {
       Alert.alert('Error', 'Select a worker to add their signature.');
@@ -57,29 +55,18 @@ const ConductToolboxTalkScreen = ({ route }) => {
       return;
     }
   
-    setWorkerSignatures((prev) => {
-      // Check if the worker's signature already exists in the previous state
-      const newSignatures = { ...prev };
-  
-      // Add the worker's signature only if it doesn't already exist
-      if (!newSignatures[currentWorker]) {
-        newSignatures[currentWorker] = currentSignature;
-      }
-  
-      return newSignatures;
-    });
-  
-    // Add the worker to the workers list only if not already added
-    setWorkers((prev) => {
-      if (!prev.includes(currentWorker)) {
-        return [...prev, currentWorker]; // Add worker if not in list
-      }
-      return prev; // If worker already exists, do nothing
-    });
-  
-    // Clear temporary state
-    setCurrentWorker('');
-    setCurrentSignature('');
+    
+    setWorkerSignatures((prev) => ({
+      ...prev,
+      [currentWorker]: currentSignature, 
+    
+    }));
+    
+    
+    
+    if (!workers.includes(currentWorker)) {
+      setWorkers((prev) => [...prev, currentWorker]);
+    }
     setShowSignaturePad(false);
   
     Alert.alert('Success', 'Worker signature saved.');
@@ -88,17 +75,17 @@ const ConductToolboxTalkScreen = ({ route }) => {
   
   
   
-  // In the display part of worker signatures
+  
+  
   {workers.length > 0 && (
     <>
       <Text style={styles.label}>Worker Signatures</Text>
       {workers.map((workerId) => {
-        const worker = employees?.find((emp) => emp.id === workerId); // Match worker by ID
+        const worker = employees?.find((emp) => emp.id === workerId); 
         return (
           <View key={workerId} style={styles.signatureCard}>
             <Text style={styles.signatureText}>
-              {worker?.first_name} {worker?.last_name}: 
-              {workerSignatures[workerId] ? '✔ Signature Captured' : 'No Signature'}
+              {worker?.first_name} {worker?.last_name}: {workerSignatures[workerId] ? '✔ Signature Captured' : 'No Signature'}
             </Text>
           </View>
         );
@@ -106,7 +93,6 @@ const ConductToolboxTalkScreen = ({ route }) => {
     </>
   )}
   
-
 
   const handleSaveToolboxTalk = async () => {
     if (!project) {
@@ -118,30 +104,30 @@ const ConductToolboxTalkScreen = ({ route }) => {
       return;
     }
   
-    // Convert workerSignatures object into the required array format
-    const signaturesArray = Object.entries(workerSignatures).map(([workerId, signature]) => ({
+    
+    const signaturesArray = workers.map((workerId) => ({
       worker: workerId,
-      signature: signature || null, // Handle cases where no signature is provided
+      signature: workerSignatures[workerId] || null, 
     }));
   
-    // Prepare form data
     const formData = new FormData();
     formData.append('toolbox_talk', id);
     formData.append('foreman_signature', foremanSignature);
     formData.append('project', project);
-    formData.append('conducted_by', JSON.stringify(workers));
-    formData.append('signed_by', JSON.stringify(workers));
-    formData.append('signatures', JSON.stringify(signaturesArray)); // Correctly formatted signatures
+    formData.append('conducted_by', JSON.stringify(workers)); // List of worker IDs
+    formData.append('signed_by', JSON.stringify(workers)); // List of worker IDs
+    formData.append('signatures', JSON.stringify(signaturesArray)); // Properly formatted signatures
+  console.warn("Heloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",signaturesArray);
   
-    console.log('FormData Content:');
-    formData.forEach((value, key) => console.log(key, value)); // Log FormData keys and values
+    formData.forEach((value, key) => console.log(key, value)); // Debug log FormData
   
     try {
       setIsLoading(true);
+      console.warn("formData",formData);
+      
       const response = await conductToolboxTalk(formData);
-      console.log('API Response:', response);
       Alert.alert('Success', 'Toolbox talk saved successfully!');
-      navigation.navigate('Toolbox Talk'); 
+      navigation.navigate('Toolbox Talk');
     } catch (error) {
       console.error('Error saving toolbox talk:', error);
       Alert.alert('Error', 'Failed to save toolbox talk. Check console for details.');
@@ -149,7 +135,6 @@ const ConductToolboxTalkScreen = ({ route }) => {
       setIsLoading(false);
     }
   };
-  
   
 
   return (
@@ -227,26 +212,43 @@ const ConductToolboxTalkScreen = ({ route }) => {
       </ScrollView>
 
       <Modal visible={showSignaturePad} animationType="slide">
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>
-            {isForemanSigning ? 'Foreman Signature' : 'Worker Signature'}
-          </Text>
-          <Signature
-            onOK={handleSignature}
-            onEmpty={() => Alert.alert('Validation Error', 'Signature is empty.')}
-            descriptionText="Sign Here"
-            clearText="Clear"
-            confirmText="Save"
-            webStyle={styles.signaturePad}
-          />
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={isForemanSigning ? saveForemanSignature : saveWorkerSignature}
-          >
-            <Text style={styles.modalButtonText}>Save Signature</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+  <View style={styles.modalContainer}>
+    {/* Back Button */}
+    <TouchableOpacity
+      style={styles.backButton}
+      onPress={() => {
+        setShowSignaturePad(false);
+        setCurrentSignature(''); // Clear the signature if back button is pressed
+      }}
+    >
+      <Text style={styles.backButtonText}>← Back</Text>
+    </TouchableOpacity>
+
+    
+    <Text style={styles.modalTitle}>
+      {isForemanSigning ? 'Foreman Signature' : 'Worker Signature'}
+    </Text>
+
+    
+    <Signature
+      onOK={handleSignature}
+      onEmpty={() => Alert.alert('Validation Error', 'Signature is empty.')}
+      descriptionText="Sign Here"
+      clearText="Clear"
+      confirmText="Save"
+      webStyle={styles.signaturePad}
+    />
+
+    
+    <TouchableOpacity
+      style={styles.modalButton}
+      onPress={isForemanSigning ? saveForemanSignature : saveWorkerSignature}
+    >
+      <Text style={styles.modalButtonText}>Save Signature</Text>
+    </TouchableOpacity>
+  </View>
+</Modal>
+
     </View>
   );
 };
@@ -254,6 +256,21 @@ const ConductToolboxTalkScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f9f9f9' },
   scrollContainer: { padding: 20 },
+  backButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    padding: 10,
+    backgroundColor: '#f2bb13',
+    borderRadius: 8,
+    zIndex: 10, 
+  },
+  backButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  
   heading: { fontSize: 26, fontWeight: '800', color: '#f2bb13', textAlign: 'center', marginBottom: 20 },
   label: { fontSize: 16, fontWeight: '600', marginBottom: 8, color: '#333' },
   input: { borderWidth: 1, borderColor: '#ddd', borderRadius: 12, padding: 12, marginBottom: 15, backgroundColor: '#fff' },
