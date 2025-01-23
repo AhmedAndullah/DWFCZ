@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'reac
 import { useLoginMutation } from '../api/authApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
+import eventEmitter from '../eventEmitter';
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,12 +14,14 @@ const LoginScreen = () => {
         try {
             const response = await login({ email, password }).unwrap();
             await AsyncStorage.setItem('authToken', response.token);
-            navigation.navigate('Toolbox Talk');
+            eventEmitter.emit('tokenChanged'); // Notify the app about token update
         } catch (err) {
             console.error('Login error:', err);
             Alert.alert('Login Failed', err?.data?.message || 'An error occurred');
         }
     };
+    
+    
     
     return (
         <View style={styles.container}>

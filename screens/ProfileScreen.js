@@ -1,15 +1,33 @@
 import React, { useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Alert , Platform } from 'react-native';
-import { useGetUserProfileQuery , useLogoutMutation } from '../api/authApi'; // Hook to fetch profile data
+import { View, Text, Image, StyleSheet, ScrollView, Alert, Platform, TouchableOpacity } from 'react-native';
+import { useGetUserProfileQuery, useLogoutMutation } from '../api/authApi'; // Hook to fetch profile data
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import eventEmitter from '../eventEmitter';
 
 const ProfileScreen = () => {
   const { data, error, isLoading } = useGetUserProfileQuery();
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (error) {
       Alert.alert('Error', 'Failed to load profile data');
     }
   }, [error]);
+
+  const handleSignOut = async () => {
+    try {
+        await AsyncStorage.removeItem('authToken'); // Remove token
+        eventEmitter.emit('tokenChanged'); // Notify App.js about the token change
+        Alert.alert('Success', 'You have been signed out.');
+    } catch (err) {
+        Alert.alert('Error', 'Failed to sign out. Please try again.');
+    }
+};
+
+
+
+  
 
   if (isLoading) {
     return (
@@ -71,6 +89,10 @@ const ProfileScreen = () => {
           <Text style={styles.value}>{company?.name || 'N/A'}</Text>
         </View>
       </View>
+      {/* Sign-Out Button */}
+      <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+        <Text style={styles.signOutText}>Sign Out</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -155,6 +177,19 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 18,
     color: '#555',
+  },
+  signOutButton: {
+    backgroundColor: '#d9534f',
+    marginHorizontal: 20,
+    marginTop: 20,
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  signOutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
