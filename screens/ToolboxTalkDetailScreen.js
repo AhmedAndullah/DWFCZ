@@ -29,7 +29,7 @@ const ToolboxTalkDetailsScreen = () => {
           throw new Error('No auth token found. Please log in again.');
         }
 
-        const response = await fetch(`https://app.dfwcz.com/api/toolbox-talks/${id}`, {
+        const response = await fetch(`https://app.dfwcz.com/api/toolbox-talks/${id}`, { 
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -38,6 +38,7 @@ const ToolboxTalkDetailsScreen = () => {
 
         if (!response.ok) {
           throw new Error(`Failed to fetch details. Status: ${response.status}`);
+          
         }
 
         const data = await response.json();
@@ -49,6 +50,7 @@ const ToolboxTalkDetailsScreen = () => {
     };
 
     if (id) fetchDetails();
+    console.log(id);
   }, [id]);
 
   const downloadPdf = async (url, fileName) => {
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     alignItems: 'center',
     marginVertical: 20,
-    elevation: 5, // Adds shadow for a professional look
+    elevation: 5, 
   },
   conductButtonText: {
     color: '#fff',

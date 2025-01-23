@@ -1,22 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  Platform,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useGetToolboxTalkQuery } from '../api/authApi';
 import { useNavigation } from '@react-navigation/native';
+import { useGetFormsQuery } from '../api/authApi'; // Adjust the import based on your actual file structure
 
-const ToolboxTalkScreen = () => {
+const FormListScreen = () => {
   const [authToken, setAuthToken] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const navigation = useNavigation();
+
+  // Fetch form data using the getForms hook
+  const { data, error, isLoading } = useGetFormsQuery();
 
   useEffect(() => {
     const fetchAuthToken = async () => {
@@ -29,10 +23,6 @@ const ToolboxTalkScreen = () => {
     };
     fetchAuthToken();
   }, []);
-
-  const { data, error, isLoading } = useGetToolboxTalkQuery(undefined, {
-    skip: !authToken,
-  });
 
   if (!authToken || isLoading) {
     return (
@@ -51,64 +41,67 @@ const ToolboxTalkScreen = () => {
     );
   }
 
-  const filteredData = data?.results?.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter data based on search query
+  const filteredData = data?.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <View style={styles.container}>
       {/* Header Section */}
       <View style={styles.header}>
-        <Text style={styles.title}>Toolbox Talks</Text>
+        <Text style={styles.title}>Form List</Text>
       </View>
 
       {/* Search Bar Section */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchBar}
-          placeholder="Search Toolbox Talks"
+          placeholder="Search Forms"
           placeholderTextColor="#666"
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
+
+        {/* Submitted Forms Button */}
+        <TouchableOpacity
+          style={styles.submittedFormsButton}
+          onPress={() => {
+            console.log('Navigating to Submitted Forms');
+            // Add navigation or functionality for "Submitted Forms" here
+            navigation.navigate('SubmitForm'); // Replace with your desired screen
+          }}
+        >
+          <Text style={styles.submittedFormsButtonText}>Submitted Forms</Text>
+        </TouchableOpacity>
       </View>
 
       {/* List Section */}
       <FlatList
-        data={filteredData || data?.results || []}
+        data={filteredData || data || []}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.item}
             onPress={() =>
-              navigation.navigate('ToolboxTalkDetails', {
+              navigation.navigate('FormDetail', {
                 id: item.id,
-                englishPdf: item.english_pdf,
-                spanishPdf: item.spanish_pdf,
+                assignment_id: 1, // hardcoded assignment_id
               })
             }
           >
-            <Image
-              source={{
-                uri: item.featured_image || 'https://via.placeholder.com/70',
-              }}
-              style={styles.itemImage}
-            />
             <View style={styles.itemContent}>
-              <Text style={styles.itemTitle}>{item.title}</Text>
-              <Text style={styles.itemCategory}>
-                Categories:{' '}
-                {item.categories.length > 0
-                  ? item.categories.map((cat) => cat.name).join(', ')
-                  : 'General'}
+              <Text style={styles.itemTitle}>{item.name}</Text>
+              <Text style={styles.itemDate}>{new Date(item.created_at).toLocaleDateString()}</Text>
+              <Text style={styles.itemSubmittedBy}>
+                Submitted by: {item.created_by.first_name} {item.created_by.last_name}
               </Text>
-              <Text style={styles.itemLanguage}>Language: {item.language || 'Not specified'}</Text>
             </View>
           </TouchableOpacity>
         )}
         ListEmptyComponent={() => (
           <View style={styles.emptyList}>
-            <Text style={styles.emptyText}>No toolbox talks available.</Text>
+            <Text style={styles.emptyText}>No forms available.</Text>
           </View>
         )}
       />
@@ -148,6 +141,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 16,
   },
+  submittedFormsButton: {
+    marginTop: 10,
+    backgroundColor: '#f2bb13',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  submittedFormsButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -156,12 +161,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 8,
     backgroundColor: '#fff',
-  },
-  itemImage: {
-    width: 70,
-    height: 70,
-    borderRadius: 8,
-    marginRight: 15,
   },
   itemContent: {
     flex: 1,
@@ -172,15 +171,14 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
   },
-  itemCategory: {
+  itemDate: {
+    fontSize: 14,
+    color: '#777',
+  },
+  itemSubmittedBy: {
     fontSize: 14,
     fontWeight: '600',
     color: '#f2bb13',
-  },
-  itemLanguage: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#777',
     marginTop: 5,
   },
   loadingText: {
@@ -205,4 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ToolboxTalkScreen;
+export default FormListScreen;
