@@ -12,11 +12,10 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import Signature from 'react-native-signature-canvas';
 import { useGetProjectsQuery, useGetEmployeeQuery, useConductToolboxTalkMutation } from '../api/authApi';
-import { useNavigation } from '@react-navigation/native'; 
-
+import { useNavigation } from '@react-navigation/native';
 
 const ConductToolboxTalkScreen = ({ route }) => {
-  const { title, id } = route.params; 
+  const { title, id } = route.params;
   const [project, setProject] = useState('');
   const [foreman, setForeman] = useState('');
   const [foremanSignature, setForemanSignature] = useState('');
@@ -44,55 +43,30 @@ const ConductToolboxTalkScreen = ({ route }) => {
       Alert.alert('Validation Error', 'Please provide a signature.');
     }
   };
+
   const saveWorkerSignature = () => {
     if (!currentWorker) {
       Alert.alert('Error', 'Select a worker to add their signature.');
       return;
     }
-  
+
     if (!currentSignature) {
       Alert.alert('Validation Error', 'Please provide a signature.');
       return;
     }
-  
-    
+
     setWorkerSignatures((prev) => ({
       ...prev,
-      [currentWorker]: currentSignature, 
-    
+      [currentWorker]: currentSignature,
     }));
-    
-    
-    
+
     if (!workers.includes(currentWorker)) {
       setWorkers((prev) => [...prev, currentWorker]);
     }
     setShowSignaturePad(false);
-  
+
     Alert.alert('Success', 'Worker signature saved.');
   };
-  
-  
-  
-  
-  
-  
-  {workers.length > 0 && (
-    <>
-      <Text style={styles.label}>Worker Signatures</Text>
-      {workers.map((workerId) => {
-        const worker = employees?.find((emp) => emp.id === workerId); 
-        return (
-          <View key={workerId} style={styles.signatureCard}>
-            <Text style={styles.signatureText}>
-              {worker?.first_name} {worker?.last_name}: {workerSignatures[workerId] ? '✔ Signature Captured' : 'No Signature'}
-            </Text>
-          </View>
-        );
-      })}
-    </>
-  )}
-  
 
   const handleSaveToolboxTalk = async () => {
     if (!project) {
@@ -103,28 +77,22 @@ const ConductToolboxTalkScreen = ({ route }) => {
       Alert.alert('Validation Error', 'Please select a foreman and provide a signature');
       return;
     }
-  
-    
+
     const signaturesArray = workers.map((workerId) => ({
       worker: workerId,
-      signature: workerSignatures[workerId] || null, 
+      signature: workerSignatures[workerId] || null,
     }));
-  
+
     const formData = new FormData();
     formData.append('toolbox_talk', id);
     formData.append('foreman_signature', foremanSignature);
     formData.append('project', project);
-    formData.append('conducted_by', JSON.stringify(workers)); // List of worker IDs
-    formData.append('signed_by', JSON.stringify(workers)); // List of worker IDs
-    formData.append('signatures', JSON.stringify(signaturesArray)); // Properly formatted signatures
-  console.warn("Heloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",signaturesArray);
-  
-    formData.forEach((value, key) => console.log(key, value)); // Debug log FormData
-  
+    formData.append('conducted_by', JSON.stringify(workers));
+    formData.append('signed_by', JSON.stringify(workers));
+    formData.append('signatures', JSON.stringify(signaturesArray));
+
     try {
       setIsLoading(true);
-      console.warn("formData",formData);
-      
       const response = await conductToolboxTalk(formData);
       Alert.alert('Success', 'Toolbox talk saved successfully!');
       navigation.navigate('Toolbox Talk');
@@ -135,10 +103,17 @@ const ConductToolboxTalkScreen = ({ route }) => {
       setIsLoading(false);
     }
   };
-  
 
   return (
     <View style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.heading}>Conduct Toolbox Talk</Text>
 
@@ -196,7 +171,7 @@ const ConductToolboxTalkScreen = ({ route }) => {
                 <View key={workerId} style={styles.signatureCard}>
                   <Text style={styles.signatureText}>
                     {worker?.first_name} {worker?.last_name}:{' '}
-                    {workerSignatures[workerId] === 'No Signature' ? 'No Signature' : '✔ Signature Captured'}
+                    {workerSignatures[workerId] ? '✔ Signature Captured' : 'No Signature'}
                   </Text>
                 </View>
               );
@@ -210,45 +185,6 @@ const ConductToolboxTalkScreen = ({ route }) => {
           </Text>
         </TouchableOpacity>
       </ScrollView>
-
-      <Modal visible={showSignaturePad} animationType="slide">
-  <View style={styles.modalContainer}>
-    {/* Back Button */}
-    <TouchableOpacity
-      style={styles.backButton}
-      onPress={() => {
-        setShowSignaturePad(false);
-        setCurrentSignature(''); // Clear the signature if back button is pressed
-      }}
-    >
-      <Text style={styles.backButtonText}>← Back</Text>
-    </TouchableOpacity>
-
-    
-    <Text style={styles.modalTitle}>
-      {isForemanSigning ? 'Foreman Signature' : 'Worker Signature'}
-    </Text>
-
-    
-    <Signature
-      onOK={handleSignature}
-      onEmpty={() => Alert.alert('Validation Error', 'Signature is empty.')}
-      descriptionText="Sign Here"
-      clearText="Clear"
-      confirmText="Save"
-      webStyle={styles.signaturePad}
-    />
-
-    
-    <TouchableOpacity
-      style={styles.modalButton}
-      onPress={isForemanSigning ? saveForemanSignature : saveWorkerSignature}
-    >
-      <Text style={styles.modalButtonText}>Save Signature</Text>
-    </TouchableOpacity>
-  </View>
-</Modal>
-
     </View>
   );
 };
@@ -257,20 +193,18 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f9f9f9' },
   scrollContainer: { padding: 20 },
   backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
+    marginTop: 20,
+    marginLeft: 10,
     padding: 10,
     backgroundColor: '#f2bb13',
     borderRadius: 8,
-    zIndex: 10, 
+    alignSelf: 'flex-start',
   },
   backButtonText: {
     color: '#fff',
     fontWeight: '600',
     fontSize: 16,
   },
-  
   heading: { fontSize: 26, fontWeight: '800', color: '#f2bb13', textAlign: 'center', marginBottom: 20 },
   label: { fontSize: 16, fontWeight: '600', marginBottom: 8, color: '#333' },
   input: { borderWidth: 1, borderColor: '#ddd', borderRadius: 12, padding: 12, marginBottom: 15, backgroundColor: '#fff' },
@@ -282,10 +216,6 @@ const styles = StyleSheet.create({
   signatureText: { fontSize: 14, fontWeight: '600', color: '#555' },
   saveButton: { backgroundColor: '#28a745', padding: 15, borderRadius: 12, alignItems: 'center', marginTop: 10 },
   saveButtonText: { color: '#fff', fontSize: 18, fontWeight: '700' },
-  modalContainer: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#fff' },
-  modalTitle: { fontSize: 22, fontWeight: '800', color: '#333', marginBottom: 20, textAlign: 'center' },
-  modalButton: { backgroundColor: '#f2bb13', padding: 12, borderRadius: 8, marginTop: 20, alignItems: 'center' },
-  modalButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });
 
 export default ConductToolboxTalkScreen;

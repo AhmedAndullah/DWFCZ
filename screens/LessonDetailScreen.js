@@ -62,6 +62,14 @@ const LessonDetailsScreen = () => {
     <ScrollView style={styles.container}>
       {/* Header Section */}
       <View style={styles.header}>
+        {/* Back Button */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+
         <Text style={styles.title}>Lesson Details</Text>
       </View>
 
@@ -87,12 +95,13 @@ const LessonDetailsScreen = () => {
       <TouchableOpacity
         style={styles.attemptButton}
         onPress={() => {
-            if (id) {
-              navigation.navigate('LessonProgress', { id }); // Pass id correctly
-            } else {
-              Alert.alert('Error', 'Lesson ID not found!');
-            }
-          }}      >
+          if (id) {
+            navigation.navigate('LessonProgress', { id }); // Pass id correctly
+          } else {
+            Alert.alert('Error', 'Lesson ID not found!');
+          }
+        }}
+      >
         <Text style={styles.attemptButtonText}>Attempt Quiz</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -109,7 +118,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: Platform.OS === 'ios' ? 50 : 30,
     paddingBottom: 20,
+    flexDirection: 'row',
     alignItems: 'center',
+  },
+  backButton: {
+    marginRight: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+  },
+  backButtonText: {
+    color: '#f2bb13',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   title: {
     fontSize: 24,

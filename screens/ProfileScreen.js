@@ -53,7 +53,13 @@ const ProfileScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Profile</Text>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
+      <Text style={styles.headerTitle}>Profile</Text>
       </View>
       <View style={styles.profileHeader}>
         <Image
@@ -191,6 +197,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  backButton: {
+    position: 'absolute',
+    left: 10,
+    top: Platform.OS === 'ios' ? 50 : 30,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  backButtonText: {
+    color: '#f2bb13',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  
 });
 
 export default ProfileScreen;

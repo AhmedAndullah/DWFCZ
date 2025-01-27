@@ -57,9 +57,17 @@ const SubmittedFormScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* Header Section with Back Button */}
       <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
         <Text style={styles.title}>Submitted Forms</Text>
       </View>
+  
       {completedForms.length > 0 ? (
         <FlatList
           data={completedForms}
@@ -74,6 +82,7 @@ const SubmittedFormScreen = () => {
       )}
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -147,6 +156,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#777',
   },
+  backButton: {
+    position: 'absolute',
+    left: 10,
+    top: Platform.OS === 'ios' ? 50 : 30,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  backButtonText: {
+    color: '#f2bb13',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  
 });
 
 export default SubmittedFormScreen;

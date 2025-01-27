@@ -30,21 +30,15 @@ const LessonProgressScreen = () => {
   );
 
   const renderIncompleteQuiz = ({ item }) => {
-    console.log('Incomplete Quiz Item:', item); // Debugging: log the item to verify its structure
-  
     return (
       <TouchableOpacity
         style={styles.formCard}
         onPress={() => {
-          console.log('Navigating to FormDetail screen with:', {
-            formID: item.id, // Correct key for form ID
-            assignmentID: 1, // Update this if there's a specific assignment ID key
-          });
           navigation.navigate('Forms', {
             screen: 'FormDetail',
             params: {
-              id: item.id, // Pass the correct form ID
-              assignment_id: 1, // Replace with actual assignment ID key if available
+              id: item.id,
+              assignment_id: 1, // Replace with actual assignment ID key if needed
             },
           });
         }}
@@ -54,8 +48,6 @@ const LessonProgressScreen = () => {
       </TouchableOpacity>
     );
   };
-  
-  
 
   if (isLoading) {
     return (
@@ -75,7 +67,14 @@ const LessonProgressScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
+      {/* Header Section with Back Button */}
       <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
         <Text style={styles.title}>Quiz Progress</Text>
       </View>
 
@@ -131,13 +130,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: Platform.OS === 'ios' ? 50 : 30,
     paddingBottom: 20,
+    flexDirection: 'row',
     alignItems: 'center',
+  },
+  backButton: {
+    marginRight: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+  },
+  backButtonText: {
+    color: '#f2bb13',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
     color: '#fff',
-    textAlign: 'center',
+    textAlign: 'centre',
+    flex: 1,
   },
   progressSection: {
     marginHorizontal: 20,
@@ -185,20 +197,6 @@ const styles = StyleSheet.create({
     color: '#28a745',
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  backButton: {
-    backgroundColor: '#007bff',
-    paddingVertical: 15,
-    borderRadius: 8,
-    marginHorizontal: 20,
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  backButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 18,
-    textTransform: 'uppercase',
   },
   loadingText: {
     fontSize: 18,

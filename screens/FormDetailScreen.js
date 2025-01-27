@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useGetFormsProgressQuery, useSubmitFormResponseMutation } from '../api/authApi';
+import { useNavigation } from '@react-navigation/native';
+
 
 const FormDetailScreen = ({ route }) => {
   const { id, assignment_id } = route.params || {};
@@ -20,6 +22,8 @@ const FormDetailScreen = ({ route }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
   const [selectedFieldId, setSelectedFieldId] = useState(null);
+  const navigation = useNavigation();
+
 
   const handleInputChange = (fieldId, value) => {
     setFormValues({ ...formValues, [fieldId]: value });
@@ -201,6 +205,15 @@ const FormDetailScreen = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
+  
+      {/* Form Components */}
       {components.map((component) => (
         <View key={component.container?.id} style={styles.componentContainer}>
           <Text style={styles.componentTitle}>
@@ -209,11 +222,13 @@ const FormDetailScreen = ({ route }) => {
           {component.children?.map((field) => renderFormField(field))}
         </View>
       ))}
+  
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
     </ScrollView>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -242,6 +257,19 @@ const styles = StyleSheet.create({
   errorText: { fontSize: 16, color: 'red' },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   loadingText: { fontSize: 16, color: '#555' },
+  backButton: {
+    margin: 20,
+    padding: 10,
+    backgroundColor: '#f2bb13',
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+  },
+  backButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  
 });
 
 export default FormDetailScreen;

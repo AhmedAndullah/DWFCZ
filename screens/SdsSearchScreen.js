@@ -8,9 +8,11 @@ import {
   Linking,
 } from "react-native";
 import { useGetSdsSearchQuery } from "../api/authApi";
+import { useNavigation } from '@react-navigation/native';
 
 const SdsSearchScreen = () => {
   const { data, isLoading, error, refetch } = useGetSdsSearchQuery();
+  const navigation = useNavigation(); // Initialize navigation
 
   useEffect(() => {
     refetch();
@@ -38,6 +40,14 @@ const SdsSearchScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
+
       {/* Heading */}
       <Text style={styles.title}>SDS Search</Text>
 
@@ -113,6 +123,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#555",
   },
+  backButton: {
+    marginBottom: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: "#f2bb13",
+    borderRadius: 8,
+    alignSelf: "flex-start",
+  },
+  backButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  
 });
 
 export default SdsSearchScreen;

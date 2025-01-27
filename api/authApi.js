@@ -136,7 +136,19 @@ export const authApi = createApi({
     getFormAssignmentsDetail: builder.query({
       query: (id) => `/form-assignment/${id}/`,
     }),
-
+    getCorrectiveActions: builder.query({
+      query: () => '/corrective-action/',
+    }),
+    getCorrectiveActionsDetail: builder.query({
+      query: (id) => `/corrective-action/${id}/`,
+    }),
+    SubmitCorrectiveAction: builder.mutation({
+      query: (formData) => ({
+        url: '/corrective-action/', 
+        method: 'POST',
+        body: formData,
+      }),
+    }),
 
     // Endpoint for conducting toolbox talks
     conductToolboxTalk: builder.mutation({
@@ -186,5 +198,8 @@ export const {
   useSubmitFormResponseMutation,
   useGetFormAssignmentsQuery,
   useGetFormAssignmentsDetailQuery,
+  useGetCorrectiveActionsQuery,
+  useGetCorrectiveActionsDetailQuery,
+  useSubmitCorrectiveActionMutation,
 
 } = authApi;

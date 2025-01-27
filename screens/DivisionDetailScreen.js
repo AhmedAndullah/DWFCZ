@@ -5,12 +5,15 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import {
   useGetEmployeeQuery,
   useGetDepartmentsQuery,
   useGetProjectsQuery,
 } from '../api/authApi';
+import { useNavigation } from '@react-navigation/native';
+
 
 const DivisionDetailScreen = () => {
   // Fetch employees
@@ -25,6 +28,8 @@ const DivisionDetailScreen = () => {
   // Combine errors and loading states
   const isLoading = isEmployeesLoading || isDepartmentsLoading || isProjectsLoading;
   const hasError = employeesError || departmentsError || projectsError;
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     if (hasError) {
@@ -54,6 +59,12 @@ const DivisionDetailScreen = () => {
   return (
     <View style={styles.container}>
       {/* Statistics Section */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
       <View style={styles.statisticsContainer}>
         <View style={[styles.statCard, styles.redCard]}>
           <Text style={styles.statValue}>{employeesData?.filter(emp => emp.is_manager).length || 0}</Text>
@@ -202,6 +213,20 @@ const styles = StyleSheet.create({
     rowOdd: {
       backgroundColor: '#fff',
     },
+    backButton: {
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+      backgroundColor: '#f2bb13',
+      borderRadius: 8,
+      marginBottom: 20,
+      alignSelf: 'flex-start',
+    },
+    backButtonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+    
   });
   
 export default DivisionDetailScreen;

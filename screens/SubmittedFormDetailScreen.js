@@ -2,11 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useGetFormAssignmentsDetailQuery } from '../api/authApi';
+import { useNavigation } from '@react-navigation/native';
+
 
 const SubmittedFormDetailScreen = () => {
   const route = useRoute();
   const { id } = route.params; // Assignment ID passed via navigation
   const { data, error, isLoading } = useGetFormAssignmentsDetailQuery(id);
+  const navigation = useNavigation();
+
 
   const handleOpenPDF = () => {
     if (data?.response_pdf) {
@@ -35,6 +39,12 @@ const SubmittedFormDetailScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
       {/* Open PDF Button */}
       {data.response_pdf && (
         <TouchableOpacity style={styles.pdfButton} onPress={handleOpenPDF}>
@@ -154,6 +164,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
+  backButton: {
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: '#f2bb13',
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+  },
+  backButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  
 });
 
 export default SubmittedFormDetailScreen;

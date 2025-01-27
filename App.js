@@ -28,6 +28,9 @@ import DivisionDetailScreen from './screens/DivisionDetailScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SubmittedFormScreen from './screens/SubmittedFormScreen';
 import SubmittedFormDetailScreen from './screens/SubmittedFormDetailScreen';
+import CorrectiveActionsScreen from './screens/CorrectiveAction';
+import CorrectiveActionDetailsScreen from './screens/CorrectiveActionDetail';
+import AddCorrectiveActionScreen from './screens/AddCorrectiveActions';
 
 
 const Drawer = createDrawerNavigator();
@@ -182,6 +185,30 @@ if (isLoading) {
       </Stack.Navigator>
     );
   }
+  function CorrectiveStack() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="CorrectiveActions"
+          component={CorrectiveActionsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CorrectiveActionsDetails"
+          component={CorrectiveActionDetailsScreen}
+          options={{ headerShown: false }}
+
+        />
+        <Stack.Screen
+          name="AddCorrectiveAction"
+          component={AddCorrectiveActionScreen}
+          options={{ headerShown: false }}
+
+        />
+      </Stack.Navigator>
+    );
+  }
+  
 
   // Drawer Navigator for Main App
   function AppDrawer() {
@@ -196,6 +223,8 @@ if (isLoading) {
         <Drawer.Screen name="Division" component={DivisionStack} />
         <Drawer.Screen name="Announcements" component={AnnouncementScreen} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
+        <Drawer.Screen name="CorrectiveActions" component={CorrectiveStack} />
+
       </Drawer.Navigator>
     );
   }

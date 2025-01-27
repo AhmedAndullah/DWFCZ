@@ -38,7 +38,6 @@ const ToolboxTalkDetailsScreen = () => {
 
         if (!response.ok) {
           throw new Error(`Failed to fetch details. Status: ${response.status}`);
-          
         }
 
         const data = await response.json();
@@ -50,7 +49,6 @@ const ToolboxTalkDetailsScreen = () => {
     };
 
     if (id) fetchDetails();
-    console.log(id);
   }, [id]);
 
   const downloadPdf = async (url, fileName) => {
@@ -82,8 +80,14 @@ const ToolboxTalkDetailsScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Title Section */}
+      {/* Header with Back Button */}
       <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
         <Text style={styles.title}>{details.title}</Text>
       </View>
 
@@ -150,16 +154,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#f9f9f9',
     paddingHorizontal: 20,
     paddingTop: Platform.OS === 'ios' ? 50 : 30,
     paddingBottom: 10,
   },
+  backButton: {
+    marginRight: 10,
+    padding: 10,
+    backgroundColor: '#f2bb13',
+    borderRadius: 5,
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
     textAlign: 'left',
+    flexShrink: 1,
   },
   featuredImage: {
     width: '100%',
@@ -211,7 +229,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     alignItems: 'center',
     marginVertical: 20,
-    elevation: 5, 
+    elevation: 5,
   },
   conductButtonText: {
     color: '#fff',
